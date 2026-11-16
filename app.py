@@ -97,7 +97,7 @@ if 'results' not in st.session_state:
 if 'scenario_version' not in st.session_state:
     st.session_state.scenario_version = 0
 
-st.title('⚡ EV Fleet Charging Optimizer')
+st.title('EV Fleet Charging Optimizer')
 st.caption('Fleet operations · mathematical optimization · cost and carbon decision support')
 st.info('**Demo scope:** one depot, identical EV specifications, one trip per vehicle, and hourly charging before departure. All example data are synthetic.', icon='ℹ️')
 
@@ -293,7 +293,62 @@ elif results:
             else:
                 st.info('No reference charging is needed for these trip assignments.')
 
-    st.markdown(f"**Selected plan:** {goal} · **Status:** {status_text(selected['status'])}")
+    
+    # SELECTED PLAN - Heading
+    st.subheader("Selected plan")
+    st.caption(
+        f"Objective: {goal} | Status: {status_text(selected['status'])}"
+    )
+
+    # Trip x Vehicle matrix with selected assignments highlighted
+    st.markdown("#### Trip × vehicle matrix - selected assignments")
+    st.caption(
+        "Values represent additional battery energy required (kWh). "
+        "Green cells indicate the trip-vehicle combinations selected "
+        "by the optimization model."
+    )
+
+    if selected['status'] in VALID:
+
+        selected_pairs = {
+            (str(a['trip']), str(a['vehicle']))
+            for a in selected['assignment']
+        }
+
+        def highlight_assignments(df):
+            styles = pd.DataFrame(
+                "", index=df.index, columns=df.columns
+            )
+
+            for idx, trip in df["Trip"].items():
+                for vehicle in df.columns[1:]:
+                    if (str(trip), str(vehicle)) in selected_pairs:
+                        styles.loc[idx, vehicle] = (
+                            "background-color: #176b48; "
+                            "color: white; "
+                            "font-weight: bold;"
+                        )
+
+            return styles
+
+        highlighted_matrix = energy_matrix.style.apply(
+            highlight_assignments, axis=None
+        ).format(precision=1, na_rep="—")
+
+        st.dataframe(
+            highlighted_matrix,
+            hide_index=True,
+            use_container_width=True
+        )
+
+    else:
+        st.dataframe(
+            energy_matrix,
+            hide_index=True,
+            use_container_width=True
+        )
+        st.info("No feasible trip-vehicle assignments available.")
+
     if selected['status'] not in VALID:
         if selected['status'] == 'INFEASIBLE' and results['edited'].get('max_emissions_kg') is not None:
             st.error('No schedule satisfies all operating constraints and the CO₂ ceiling. Raise the ceiling or change charging capacity / energy demand.')
