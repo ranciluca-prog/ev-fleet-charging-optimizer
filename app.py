@@ -57,7 +57,7 @@ if 'results' not in st.session_state:
 if 'scenario_version' not in st.session_state:
     st.session_state.scenario_version = 0
 
-st.title('⚡ EV Fleet Charging Optimizer')
+st.title('EV Fleet Charging Optimizer')
 st.caption('Fleet operations · mathematical optimization · cost and carbon decision support')
 st.info('**Demo scope:** one depot, identical EV specifications, one trip per vehicle, and hourly charging before departure. All example data are synthetic.', icon='ℹ️')
 
