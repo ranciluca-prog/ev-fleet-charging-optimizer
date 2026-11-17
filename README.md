@@ -1,4 +1,4 @@
-# EV Fleet Charging Optimizer ⚡
+# EV Fleet Charging Optimizer 
 
 **Interactive decision-support prototype for fleet managers (v3).** This Streamlit app uses **Google OR-Tools CP-SAT** to assign planned trips to electric vehicles and schedule pre-departure charging. It can minimize charging cost, minimize estimated electricity-related CO₂e, or optimize under a **maximum-emissions constraint**.
 
