@@ -96,54 +96,6 @@ requirements.txt       Runtime dependencies
 6. `OPTIMAL` means optimal within this mathematical formulation. `FEASIBLE` means a valid schedule without a proof of global optimality; `UNKNOWN` is **not** evidence of infeasibility.
 7. This is a **decision-support prototype**, not a certified charge-point controller. Verify compatibility and real operational needs before deploying.
 
-## Publishing on GitHub and Streamlit Community Cloud
 
-1. Create a new GitHub repository and upload the files from this folder **to its root** (`app.py`, `requirements.txt`, etc.). Do not upload `.venv`.
-2. Test locally using the commands above.
-3. On https://share.streamlit.io, sign in with GitHub, select the repository, branch and `app.py` as the main entry point, then deploy.
-4. Verify the hosted app by running all four prepared example scenarios, the 18:00 reference and the emissions-cap trade-off.
-5. Add the public Streamlit URL and a screenshot to the repository README. Never put API keys into the repository.
-
-**Roadmap:** individual departure/return windows, multiple trips per EV, measured baseline comparisons, live tariff/carbon feeds, charger-level interoperability and expanded independent validation.
-
-## Portfolio demonstration script (3 minutes)
-
-1. Open **Standard fleet**, edit one SoC %, and show the instantly derived available kWh. Run **Minimize cost** and demonstrate the trip–vehicle matrix and 18:00 reference chart.
-2. Load **Carbon-constrained fleet**, keep **Minimize cost** and run again. Explain the 20 kg CO₂e ceiling and the +4 kg intermediate ceilings on the cost–carbon scatterplot.
-3. Load **Impossible trip**, run optimization and explain that an impossible journey is rejected rather than assigned.
-4. Point out the white vehicle labels inside charging blocks. Download the 18:00 reference schedule, optimized charging CSV and full JSON report. Mention that prices and carbon factors are synthetic.
-
-## Reproducibility and checks
-
-```bash
-python -m unittest discover -v
-python -m compileall -q .
-```
-
-The tests include a tiny independently calculable scenario: 1 kWh charge at €0.20/kWh and 100 gCO₂e/kWh, efficiency 100%. Expected cost: €0.20; expected emissions: 0.1000 kg. A ceiling of 0.1000 kg is feasible and 0.0999 kg is not. **Do not claim the tests passed without executing them in an environment with OR-Tools.**
-
-## Windows / VS Code quickstart
-
-1. Install Python and VS Code. Open the extracted project folder in VS Code (**File → Open Folder**).
-2. Open **Terminal → New Terminal** (do not type these commands into a Python notebook or the Python interactive console).
-3. Run:
-
-```powershell
-py -m pip install -r requirements.txt
-py -m unittest discover -v
-py -m streamlit run app.py
-```
-
-If `py` is not recognized, use `python` instead. If dependencies fail to install, check your selected Python interpreter and use a supported Python version (3.11 or 3.12 is a practical choice).
-
-## Publication checklist
-
-- [ ] Install dependencies and pass all tests locally.
-- [ ] Open the UI locally and verify the four prepared scenarios and data editing.
-- [ ] Upload only the project files to a public GitHub repository; keep virtual environments and secrets out.
-- [ ] Connect the GitHub repo to **Streamlit Community Cloud** and set the entry point to `app.py`.
-- [ ] Retest the hosted application and ensure that the cost/carbon cap matches the downloaded JSON.
-- [ ] Add the live demo URL, one screenshot and validated example outputs to the README.
-- [ ] Record a short demo and include its link in the README.
 
 The portfolio README deliberately does not claim independently measured savings or a running public deployment until verified.
